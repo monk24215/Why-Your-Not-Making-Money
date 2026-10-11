@@ -1,59 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Why You're Not Making Money Yet</title>
-<style>
-  body { font-family: Arial, Helvetica, sans-serif; max-width: 680px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #222; }
-  h1 { font-size: 1.8em; }
-  a.button { display: inline-block; padding: 10px 18px; background: #1565c0; color: #fff; text-decoration: none; border-radius: 6px; }
-  hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why You're Not Making Money Yet</title>
+  <meta name="description" content="Five usual reasons people don't make money online, and the one that matters most. A free 1-2-3 for finding buyers who already decided. Pay what you want." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .gradient-bg {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      backdrop-filter: blur(8px);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(14, 165, 233, 0.35);
+    }
+  </style>
 </head>
-<body>
+<body class="gradient-bg text-slate-200 min-h-screen">
 
-<h1>Why You're Not Making Money Yet</h1>
+  <!-- Header -->
+  <header class="border-b border-slate-700/50">
+    <div class="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-sky-500/20 border border-sky-400/30 flex items-center justify-center">
+          <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <span class="font-semibold text-white tracking-tight">Marketrs Training</span>
+      </div>
+      <a href="#intake" class="text-sm text-sky-400 hover:text-sky-300 font-medium">Get Help →</a>
+    </div>
+  </header>
 
-<p>Five usual reasons:</p>
-<ol>
-  <li>Training resources sucked</li>
-  <li>The system isn't good</li>
-  <li>The guru lied or tricked you</li>
-  <li>The product was bad</li>
-  <li>The advertising was bad</li>
-</ol>
+  <!-- Hero -->
+  <section class="max-w-5xl mx-auto px-6 pt-16 pb-12 text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-400/20 text-sky-300 text-xs font-medium mb-6">
+      Free · Pay what you want
+    </div>
+    <h1 class="text-4xl sm:text-5xl font-bold text-white leading-tight tracking-tight max-w-3xl mx-auto">
+      Why you're not making money yet.<br />
+      <span class="text-sky-400">Most of the time, it's the audience.</span>
+    </h1>
+    <p class="mt-6 text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+      Marketing isn't selling. It's finding people who already decided what they want, then giving it to them exactly the way they want it.
+    </p>
+    <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="#method" class="btn-primary text-white font-semibold px-8 py-3.5 rounded-xl text-base">
+        Read the 1-2-3
+      </a>
+      <a href="#pay" class="px-8 py-3.5 rounded-xl border border-slate-600 text-slate-300 hover:border-slate-500 hover:text-white font-medium transition">
+        Pay what you want
+      </a>
+    </div>
+  </section>
 
-<p>Most of the time the real reason is none of these: <strong>the audience wasn't already looking for what you were selling.</strong></p>
+  <!-- Five reasons -->
+  <section class="max-w-5xl mx-auto px-6 py-12">
+    <div class="card rounded-2xl p-8 md:p-10">
+      <h2 class="text-2xl font-bold text-white mb-2">Five usual reasons</h2>
+      <p class="text-slate-400 mb-8">Check these first. Most people blame one of them.</p>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="flex gap-4 items-start">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">1</div>
+          <p class="text-slate-300 pt-1">Training resources sucked</p>
+        </div>
+        <div class="flex gap-4 items-start">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">2</div>
+          <p class="text-slate-300 pt-1">The system isn't good</p>
+        </div>
+        <div class="flex gap-4 items-start">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">3</div>
+          <p class="text-slate-300 pt-1">The guru lied or tricked you</p>
+        </div>
+        <div class="flex gap-4 items-start">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">4</div>
+          <p class="text-slate-300 pt-1">The product was bad</p>
+        </div>
+        <div class="flex gap-4 items-start sm:col-span-2">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">5</div>
+          <p class="text-slate-300 pt-1">The advertising was bad</p>
+        </div>
+      </div>
+      <p class="mt-8 text-slate-200 leading-relaxed">
+        Most of the time the real reason is none of these: <strong class="text-white">the audience wasn't already looking for what you were selling.</strong>
+      </p>
+    </div>
+  </section>
 
-<p>Before anything else:</p>
-<ol>
-  <li>Locate your audience.</li>
-  <li>Identify exactly what they're trying to buy.</li>
-  <li>Find someone already selling it successfully.</li>
-  <li>Check that you can access what you need affordably.</li>
-</ol>
+  <!-- Before anything else -->
+  <section class="max-w-5xl mx-auto px-6 py-12">
+    <div class="card rounded-2xl p-8 md:p-10">
+      <h2 class="text-2xl font-bold text-white mb-2">Before anything else</h2>
+      <p class="text-slate-400 mb-8">Four checks. In order.</p>
+      <div class="space-y-6">
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">1</div>
+          <div>
+            <h4 class="font-semibold text-white">Locate your audience</h4>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">2</div>
+          <div>
+            <h4 class="font-semibold text-white">Identify exactly what they're trying to buy</h4>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">3</div>
+          <div>
+            <h4 class="font-semibold text-white">Find someone already selling it successfully</h4>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">4</div>
+          <div>
+            <h4 class="font-semibold text-white">Check that you can access what you need affordably</h4>
+          </div>
+        </div>
+      </div>
+      <p class="mt-8 text-slate-200 font-semibold">Then give them what they expect, where and when they expect it.</p>
+    </div>
+  </section>
 
-<p>Then give them what they expect, where and when they expect it.</p>
+  <!-- The 1-2-3 -->
+  <section id="method" class="max-w-5xl mx-auto px-6 py-12">
+    <div class="card rounded-2xl p-8 md:p-10">
+      <h2 class="text-2xl font-bold text-white mb-2">The Quick 1-2-3</h2>
+      <p class="text-slate-400 mb-8">Find buyers who already decided.</p>
+      <div class="space-y-8">
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">1</div>
+          <div>
+            <h4 class="font-semibold text-white">Find a marketplace where people are already buying</h4>
+            <p class="text-slate-400 text-sm mt-1 leading-relaxed">Look for steady sales and lots of reviews. Reviews mean real buyers. Skip anything with no sales history.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">2</div>
+          <div>
+            <h4 class="font-semibold text-white">Find one seller already winning there</h4>
+            <p class="text-slate-400 text-sm mt-1 leading-relaxed">Note what they sell, where buyers find them, and the words they use.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">3</div>
+          <div>
+            <h4 class="font-semibold text-white">Read that seller's reviews, especially the 1-star ones</h4>
+            <p class="text-slate-400 text-sm mt-1 leading-relaxed">Those show what buyers wanted and didn't get. Write down their exact phrases. That's your copy.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<p><strong>Step 1 (Quick 1-2-3):</strong> Find a marketplace where people are already buying. Look for steady sales and lots of reviews.</p>
+  <!-- Test -->
+  <section class="max-w-5xl mx-auto px-6 py-12">
+    <div class="card rounded-2xl p-8 md:p-10">
+      <h2 class="text-2xl font-bold text-white mb-2">Test before you build</h2>
+      <p class="text-slate-400 mb-8">Your only goal is $1.</p>
+      <div class="space-y-6">
+        <div>
+          <h4 class="font-semibold text-white">Test with the smallest version</h4>
+          <p class="text-slate-400 text-sm mt-1 leading-relaxed">One product, one listing, one link. Put it where the winner's buyers already shop. Spend little or nothing.</p>
+        </div>
+        <div>
+          <h4 class="font-semibold text-white">Check the result</h4>
+          <p class="text-slate-400 text-sm mt-1 leading-relaxed">No sales and no clicks? Wrong place or wrong audience. Go back to step 2 and pick a different winner. Clicks but no sales? Right audience. Adjust the offer using their words.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<p><strong>Step 2:</strong> Find one seller already winning there. Note what they sell, where buyers find them, and the words they use.</p>
+  <!-- Pay / intake -->
+  <section id="pay" class="max-w-3xl mx-auto px-6 py-16">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-bold text-white">This is free.</h2>
+      <p class="mt-3 text-slate-400">If it helped, pay what you want.</p>
+    </div>
+    <div class="card rounded-2xl p-8 md:p-10 text-center">
+      <a href="https://buy.stripe.com/5kQ7sK6Z97ja5OU7MX8IU01" class="btn-primary inline-block text-white font-semibold px-8 py-3.5 rounded-xl text-base">
+        Pay what you want
+      </a>
+    </div>
+  </section>
 
-<p><strong>Step 3:</strong> Read that seller's reviews, especially the 1-star ones. Those show what buyers wanted and didn't get. Write down their exact phrases.</p>
+  <!-- Services -->
+  <section id="intake" class="max-w-3xl mx-auto px-6 py-12">
+    <div class="card rounded-2xl p-8 md:p-10 text-center">
+      <h3 class="text-xl font-bold text-white mb-2">Need help with email setup or copywriting?</h3>
+      <p class="text-slate-400 mb-8">Tell me what you're working on. Same deal: pay what you want.</p>
+      <a href="https://tally.so/r/lboLDX" class="btn-primary inline-block text-white font-semibold px-8 py-3.5 rounded-xl text-base">
+        Tell me what you need
+      </a>
+    </div>
+  </section>
 
-<p><strong>Step 4:</strong> Test with the smallest version: one product, one listing, one link. Spend little or nothing. Your only goal is $1.</p>
-
-<p><strong>Step 5:</strong> Check the result. No sales and no clicks? Wrong place or wrong audience, so go back to Step 2. Clicks but no sales? Right audience, adjust the offer using their words.</p>
-
-<hr>
-
-<p>This is free. If it helped, pay what you want.<br>
-<a class="button" href="https://buy.stripe.com/5kQ7sK6Z97ja5OU7MX8IU01">Pay what you want</a></p>
-
-<p>I also help with email setup and copywriting. Tell me what you need.<br>
-<a class="button" href="https://tally.so/r/lboLDX">Tell me what you need</a></p>
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 mt-8">
+    <div class="max-w-5xl mx-auto px-6 py-8 text-center text-sm text-slate-500">
+      <p>Marketing is finding people who already decided. Start there.</p>
+    </div>
+  </footer>
 
 </body>
 </html>
