@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Why You're Not Making Money Yet</title>
-  <meta name="description" content="You're not missing a secret. You're missing the audience. Find out what they want, how they want it, and what it looks like." />
+  <meta name="description" content="The issue is the audience. Answer a few questions and see exactly what to do next." />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,101 +17,133 @@
       border: 1px solid rgba(148, 163, 184, 0.15);
       backdrop-filter: blur(8px);
     }
+    .option {
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(15, 23, 42, 0.8);
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .option:hover { border-color: #38bdf8; }
+    .option.selected { border-color: #38bdf8; background: rgba(14, 165, 233, 0.12); }
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(14, 165, 233, 0.35); }
+    .hidden-step { display: none; }
   </style>
 </head>
 <body class="gradient-bg text-slate-200 min-h-screen">
 
-  <!-- Header -->
   <header class="border-b border-slate-700/50">
-    <div class="max-w-3xl mx-auto px-6 py-5">
+    <div class="max-w-2xl mx-auto px-6 py-5">
       <span class="font-semibold text-white tracking-tight">Marketrs Training</span>
     </div>
   </header>
 
-  <!-- Core message -->
-  <section class="max-w-3xl mx-auto px-6 pt-16 pb-12 text-center">
+  <!-- Answer -->
+  <section class="max-w-2xl mx-auto px-6 pt-16 pb-10 text-center">
     <h1 class="text-4xl sm:text-5xl font-bold text-white leading-tight tracking-tight">
-      You're not missing a secret.<br />
-      <span class="text-sky-400">You're missing the audience.</span>
+      The issue is <span class="text-sky-400">the audience.</span>
     </h1>
     <p class="mt-6 text-lg text-slate-400 leading-relaxed">
-      Marketing isn't selling. It's finding people who already decided what they want, then giving it to them exactly the way they want it.
+      Identify who they are, what they want, how they want it, and what it looks like. Then give it to them.
     </p>
   </section>
 
-  <!-- The three questions -->
-  <section class="max-w-3xl mx-auto px-6 py-12">
-    <div class="card rounded-2xl p-8 md:p-10">
-      <h2 class="text-2xl font-bold text-white mb-8">Every sale comes down to three questions</h2>
-      <div class="space-y-8">
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">1</div>
-          <div>
-            <h3 class="font-semibold text-white">What do they want?</h3>
-            <p class="text-slate-400 text-sm mt-1 leading-relaxed">Not what you think they should want. What they are already looking for, in their own words.</p>
-          </div>
-        </div>
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">2</div>
-          <div>
-            <h3 class="font-semibold text-white">How do they want it?</h3>
-            <p class="text-slate-400 text-sm mt-1 leading-relaxed">The format, the price, the speed, the level of detail. Whatever they already buy looks like this.</p>
-          </div>
-        </div>
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">3</div>
-          <div>
-            <h3 class="font-semibold text-white">What does it look like?</h3>
-            <p class="text-slate-400 text-sm mt-1 leading-relaxed">Show them the exact thing they pictured. If they can see themselves using it, the sale is already made.</p>
-          </div>
+  <!-- Questions -->
+  <section class="max-w-2xl mx-auto px-6 pb-16">
+    <form id="flow" class="card rounded-2xl p-8 md:p-10" onsubmit="event.preventDefault(); next();">
+
+      <!-- Step 1 -->
+      <div class="step" data-step="1">
+        <p class="text-sm text-sky-400 font-semibold uppercase tracking-wider mb-2">Question 1 of 3</p>
+        <h2 class="text-xl font-bold text-white mb-6">Where are you right now?</h2>
+        <div class="space-y-3" data-group="stage">
+          <button type="button" class="option w-full text-left rounded-xl px-5 py-3.5 text-slate-200" data-value="new">Just starting, nothing sold yet</button>
+          <button type="button" class="option w-full text-left rounded-xl px-5 py-3.5 text-slate-200" data-value="burned">Tried something and it didn't work</button>
+          <button type="button" class="option w-full text-left rounded-xl px-5 py-3.5 text-slate-200" data-value="small">Selling a little, want it to grow</button>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- The method -->
-  <section class="max-w-3xl mx-auto px-6 py-12">
-    <div class="card rounded-2xl p-8 md:p-10">
-      <h2 class="text-2xl font-bold text-white mb-2">Find it in three steps</h2>
-      <p class="text-slate-400 mb-8">Simple on purpose. Nothing to buy.</p>
-      <div class="space-y-6">
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">1</div>
-          <div>
-            <h4 class="font-semibold text-white">Find a marketplace where people are already buying</h4>
-            <p class="text-slate-400 text-sm mt-1 leading-relaxed">Steady sales and lots of reviews. Reviews mean real buyers.</p>
-          </div>
-        </div>
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">2</div>
-          <div>
-            <h4 class="font-semibold text-white">Study one seller who is already winning</h4>
-            <p class="text-slate-400 text-sm mt-1 leading-relaxed">What they sell, where buyers find them, and the words they use.</p>
-          </div>
-        </div>
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold">3</div>
-          <div>
-            <h4 class="font-semibold text-white">Read their reviews, especially the 1-star ones</h4>
-            <p class="text-slate-400 text-sm mt-1 leading-relaxed">They show exactly what buyers wanted and didn't get. Write down their phrases. That's what you give them.</p>
-          </div>
-        </div>
+      <!-- Step 2 -->
+      <div class="step hidden-step" data-step="2">
+        <p class="text-sm text-sky-400 font-semibold uppercase tracking-wider mb-2">Question 2 of 3</p>
+        <h2 class="text-xl font-bold text-white mb-6">What are you selling or trying to sell?</h2>
+        <input type="text" id="product" required placeholder="e.g. a guide, a product, a service" class="w-full rounded-xl px-5 py-3.5 bg-slate-900/80 border border-slate-600 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-400" />
       </div>
-    </div>
+
+      <!-- Step 3 -->
+      <div class="step hidden-step" data-step="3">
+        <p class="text-sm text-sky-400 font-semibold uppercase tracking-wider mb-2">Question 3 of 3</p>
+        <h2 class="text-xl font-bold text-white mb-6">Who is it for?</h2>
+        <textarea id="audience" rows="3" required placeholder="Describe the person who is already looking for this" class="w-full rounded-xl px-5 py-3.5 bg-slate-900/80 border border-slate-600 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-400 resize-y"></textarea>
+      </div>
+
+      <!-- Result -->
+      <div class="step hidden-step" data-step="done">
+        <p class="text-sm text-sky-400 font-semibold uppercase tracking-wider mb-2">Your next step</p>
+        <h2 class="text-xl font-bold text-white mb-4">Find someone already selling to that person.</h2>
+        <p class="text-slate-400 leading-relaxed mb-4">Look at their reviews, especially the 1-star ones. Copy the words buyers use. That's what you give them.</p>
+        <p class="text-slate-400 leading-relaxed">Start with one product, one link, one post. Your only goal is $1.</p>
+      </div>
+
+      <div class="mt-8 flex justify-between items-center" data-nav>
+        <button type="button" id="back" class="text-sm text-slate-500 hover:text-slate-300 invisible" onclick="back()">← Back</button>
+        <button type="submit" id="nextBtn" class="btn-primary text-white font-semibold px-7 py-3 rounded-xl text-sm">Next</button>
+      </div>
+    </form>
+
+    <p class="text-center text-xs text-slate-500 mt-10">
+      This is free. If it helped, <a href="https://buy.stripe.com/5kQ7sK6Z97ja5OU7MX8IU01" class="underline hover:text-slate-300">you can pay what you want</a>.
+    </p>
   </section>
 
-  <!-- Close -->
-  <section class="max-w-3xl mx-auto px-6 py-16 text-center">
-    <p class="text-xl text-white font-semibold leading-relaxed">Identify the audience. Know what they want. Give it to them.</p>
-    <p class="mt-4 text-slate-400">That's the whole thing.</p>
-  </section>
+  <script>
+    let current = 1;
+    const steps = Array.from(document.querySelectorAll('.step'));
+    const backBtn = document.getElementById('back');
+    const nextBtn = document.getElementById('nextBtn');
+    const answers = {};
 
-  <!-- Footer: payment is quiet, not a pitch -->
-  <footer class="border-t border-slate-800 mt-8">
-    <div class="max-w-3xl mx-auto px-6 py-8 text-center text-xs text-slate-500">
-      <p>This is free. If it helped, <a href="https://buy.stripe.com/5kQ7sK6Z97ja5OU7MX8IU01" class="underline hover:text-slate-300">you can pay what you want</a>.</p>
-    </div>
-  </footer>
+    // Single-choice options (step 1)
+    document.querySelectorAll('[data-group] .option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.parentElement.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        answers.stage = btn.dataset.value;
+        setTimeout(next, 250);
+      });
+    });
 
+    function show(n) {
+      steps.forEach(s => s.classList.toggle('hidden-step', s.dataset.step != n));
+      backBtn.classList.toggle('invisible', n === 1 || n === 'done');
+      nextBtn.textContent = n === 3 ? 'See my next step' : (n === 'done' ? 'Start over' : 'Next');
+      nextBtn.type = 'submit';
+      document.querySelector('[data-nav]').classList.toggle('hidden-step', n === 'done' ? false : false);
+    }
+
+    function next() {
+      if (current === 1 && !answers.stage) return;
+      if (current === 2) answers.product = document.getElementById('product').value;
+      if (current === 3) {
+        answers.audience = document.getElementById('audience').value;
+        current = 'done';
+        show(current);
+        nextBtn.onclick = () => location.reload();
+        return;
+      }
+      current = current === 1 ? 2 : 3;
+      show(current);
+    }
+
+    function back() {
+      if (current === 2) current = 1;
+      else if (current === 3) current = 2;
+      show(current);
+    }
+
+    show(current);
+  </script>
 </body>
 </html>
