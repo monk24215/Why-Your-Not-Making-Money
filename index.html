@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Why You're Not Making Money Yet</title>
-  <meta name="description" content="The issue is the audience. Answer a few questions and see exactly what to do next." />
+  <meta name="description" content="If you've tried and it hasn't worked, you weren't failing. You were pointed in the wrong direction. Answer a few easy questions and leave with a one-page audience card in your own words." />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -17,133 +18,555 @@
       border: 1px solid rgba(148, 163, 184, 0.15);
       backdrop-filter: blur(8px);
     }
-    .option {
+    .field {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
+    .option, .chip {
       border: 1px solid rgba(148, 163, 184, 0.25);
       background: rgba(15, 23, 42, 0.8);
       transition: border-color 0.15s, background 0.15s;
     }
-    .option:hover { border-color: #38bdf8; }
-    .option.selected { border-color: #38bdf8; background: rgba(14, 165, 233, 0.12); }
+    .option:hover, .chip:hover { border-color: #38bdf8; }
+    .option.selected, .chip.selected { border-color: #38bdf8; background: rgba(14, 165, 233, 0.15); color: #fff; }
     .btn-primary {
       background: linear-gradient(135deg, #0ea5e9, #0284c7);
       transition: transform 0.15s, box-shadow 0.15s;
     }
     .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(14, 165, 233, 0.35); }
-    .hidden-step { display: none; }
+    button:focus-visible, a:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
+    .screen { display: none; }
+    .screen.active { display: block; animation: fadein 0.25s ease-out; }
+    @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .screen.active { animation: none; } .btn-primary:hover { transform: none; } }
+    #card { background: #0f172a; }
+    @media print {
+      body { background: #fff !important; }
+      .no-print { display: none !important; }
+      main { padding: 0 !important; }
+      #card { background: #fff !important; border: 1px solid #999 !important; }
+      #card * { color: #000 !important; }
+    }
   </style>
 </head>
 <body class="gradient-bg text-slate-200 min-h-screen">
 
-  <header class="border-b border-slate-700/50">
-    <div class="max-w-2xl mx-auto px-6 py-5">
-      <span class="font-semibold text-white tracking-tight">Marketrs Training</span>
+  <header class="border-b border-slate-700/50 no-print">
+    <div class="max-w-2xl mx-auto px-5 sm:px-6 py-5 flex items-center justify-between">
+      <span class="font-semibold text-white tracking-tight">Why You're Not Making Money Yet</span>
+      <button type="button" id="restartTop" class="hidden text-sm text-slate-400 hover:text-slate-200">Start over</button>
     </div>
   </header>
 
-  <!-- Answer -->
-  <section class="max-w-2xl mx-auto px-6 pt-16 pb-10 text-center">
-    <h1 class="text-4xl sm:text-5xl font-bold text-white leading-tight tracking-tight">
-      The issue is <span class="text-sky-400">the audience.</span>
-    </h1>
-    <p class="mt-6 text-lg text-slate-400 leading-relaxed">
-      Identify who they are, what they want, how they want it, and what it looks like. Then give it to them.
-    </p>
-  </section>
+  <main class="max-w-2xl mx-auto px-5 sm:px-6 py-10 sm:py-14">
 
-  <!-- Questions -->
-  <section class="max-w-2xl mx-auto px-6 pb-16">
-    <form id="flow" class="card rounded-2xl p-8 md:p-10" onsubmit="event.preventDefault(); next();">
+    <div id="progressWrap" class="no-print mb-8 hidden">
+      <div class="flex justify-between text-xs text-slate-500 mb-2">
+        <span id="progressLabel"></span>
+        <span>Your answers stay on this device</span>
+      </div>
+      <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+        <div id="progressBar" class="h-full bg-sky-500 transition-all duration-300" style="width:0%"></div>
+      </div>
+    </div>
 
-      <!-- Step 1 -->
-      <div class="step" data-step="1">
-        <p class="text-sm text-sky-400 font-semibold uppercase tracking-wider mb-2">Question 1 of 3</p>
-        <h2 class="text-xl font-bold text-white mb-6">Where are you right now?</h2>
-        <div class="space-y-3" data-group="stage">
-          <button type="button" class="option w-full text-left rounded-xl px-5 py-3.5 text-slate-200" data-value="new">Just starting, nothing sold yet</button>
-          <button type="button" class="option w-full text-left rounded-xl px-5 py-3.5 text-slate-200" data-value="burned">Tried something and it didn't work</button>
-          <button type="button" class="option w-full text-left rounded-xl px-5 py-3.5 text-slate-200" data-value="small">Selling a little, want it to grow</button>
+    <p id="encourage" class="no-print text-emerald-300 text-sm mb-5 hidden"></p>
+
+    <!-- INTRO -->
+    <section class="screen" data-screen="intro">
+      <h1 class="text-3xl sm:text-4xl font-bold text-white leading-tight tracking-tight">
+        If you've tried and it hasn't worked, you weren't failing.
+      </h1>
+      <p class="mt-4 text-2xl sm:text-3xl font-semibold text-sky-400 leading-snug">You were pointed in the wrong direction.</p>
+      <p class="mt-6 text-lg text-slate-400 leading-relaxed">
+        The courses, systems, and gurus usually skip the one part that matters most: the people you're selling to.
+        When you know who already wants something, and how they want it, the selling mostly takes care of itself.
+      </p>
+
+      <div class="card rounded-2xl p-6 sm:p-8 mt-10">
+        <h2 class="text-lg font-semibold text-white">The whole idea</h2>
+        <p class="mt-2 text-slate-300 leading-relaxed">Find people who already want something. Give it to them exactly the way they want it.</p>
+      </div>
+
+      <div class="mt-10">
+        <h2 class="text-lg font-semibold text-white">What you'll leave with</h2>
+        <p class="mt-2 text-slate-400 leading-relaxed">A one-page audience card, in your own words. Here's an example of a finished one:</p>
+        <div class="mt-5 rounded-2xl border border-slate-700 bg-slate-900/70 p-6 text-sm space-y-3">
+          <p><span class="text-slate-500">Who they are:</span> <span class="text-slate-200">People who just adopted a rescue dog</span></p>
+          <p><span class="text-slate-500">What they wish they'd gotten:</span> <span class="text-slate-200">"Something that actually stops the pulling without yelling at him"</span></p>
+          <p><span class="text-slate-500">How they want it:</span> <span class="text-slate-200">Short videos, low price, this week</span></p>
+          <p><span class="text-slate-500">What it looks like:</span> <span class="text-slate-200">A 5-day leash guide, one 3-minute video a day, under $20</span></p>
+        </div>
+        <p class="mt-3 text-sm text-slate-500">That's it. Small on purpose.</p>
+      </div>
+
+      <div class="mt-10">
+        <h2 class="text-lg font-semibold text-white">How this works</h2>
+        <p class="mt-2 text-slate-400 leading-relaxed">A few easy questions, one at a time. "Not sure yet" is always an okay answer. About ten minutes, no signup, and nothing to buy.</p>
+      </div>
+
+      <div id="resumeBox" class="hidden mt-8 rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-5">
+        <p class="text-emerald-200">Welcome back. Your answers are still here.</p>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <button type="button" id="resumeBtn" class="btn-primary text-white font-semibold px-6 py-3 rounded-xl text-sm">Pick up where I left off</button>
+          <button type="button" id="freshBtn" class="px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:text-white text-sm">Start a new card</button>
         </div>
       </div>
 
-      <!-- Step 2 -->
-      <div class="step hidden-step" data-step="2">
-        <p class="text-sm text-sky-400 font-semibold uppercase tracking-wider mb-2">Question 2 of 3</p>
-        <h2 class="text-xl font-bold text-white mb-6">What are you selling or trying to sell?</h2>
-        <input type="text" id="product" required placeholder="e.g. a guide, a product, a service" class="w-full rounded-xl px-5 py-3.5 bg-slate-900/80 border border-slate-600 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-400" />
+      <button type="button" id="startBtn" class="btn-primary mt-10 w-full sm:w-auto text-white font-semibold px-8 py-3.5 rounded-xl text-base">Start</button>
+    </section>
+
+    <!-- STAGE -->
+    <section class="screen" data-screen="stage">
+      <h2 class="text-2xl font-bold text-white">Where are you right now?</h2>
+      <p class="mt-2 text-slate-400">Pick the one that fits best. There's no wrong answer.</p>
+      <div class="mt-7 space-y-3" data-choice="stage">
+        <button type="button" class="option w-full text-left rounded-xl px-5 py-4 text-slate-200" data-value="none">I don't have anything to sell yet</button>
+        <button type="button" class="option w-full text-left rounded-xl px-5 py-4 text-slate-200" data-value="burned">I tried something and it didn't work</button>
+        <button type="button" class="option w-full text-left rounded-xl px-5 py-4 text-slate-200" data-value="selling">I'm selling a little and want more</button>
+      </div>
+    </section>
+
+    <!-- HOPE -->
+    <section class="screen" data-screen="hope">
+      <h2 id="hopeQ" class="text-2xl font-bold text-white"></h2>
+      <p id="hopeSub" class="mt-2 text-slate-400 leading-relaxed"></p>
+      <textarea data-field="hope" rows="4" class="field mt-6 w-full rounded-xl px-5 py-4 text-slate-200 placeholder-slate-500 resize-y" placeholder="Say it the way you'd say it to a friend"></textarea>
+    </section>
+
+    <!-- TOPIC -->
+    <section class="screen" data-screen="topic">
+      <h2 id="topicQ" class="text-2xl font-bold text-white"></h2>
+      <p id="topicSub" class="mt-2 text-slate-400 leading-relaxed"></p>
+      <input data-field="topic" type="text" class="field mt-6 w-full rounded-xl px-5 py-4 text-slate-200 placeholder-slate-500" id="topicInput" />
+    </section>
+
+    <!-- WHERE -->
+    <section class="screen" data-screen="where">
+      <h2 class="text-2xl font-bold text-white">Who's already buying something like this?</h2>
+      <p class="mt-2 text-slate-400 leading-relaxed">Picture the person. Then think about where they already shop or ask questions.</p>
+      <textarea data-field="who" rows="3" class="field mt-6 w-full rounded-xl px-5 py-4 text-slate-200 placeholder-slate-500 resize-y" placeholder="e.g. people who just adopted a rescue dog"></textarea>
+      <p class="mt-6 text-sm font-medium text-slate-300">Where do they spend time? Pick any.</p>
+      <div class="mt-3 flex flex-wrap gap-2" data-chips="places" data-multi="true">
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Amazon">Amazon</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Etsy">Etsy</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="eBay">eBay</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Reddit">Reddit</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="YouTube">YouTube</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Facebook groups">Facebook groups</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Local, in person">Local, in person</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Not sure yet">Not sure yet</button>
+      </div>
+    </section>
+
+    <!-- LOOK -->
+    <section class="screen" data-screen="look">
+      <h2 class="text-2xl font-bold text-white">Go see what buyers are already saying.</h2>
+      <p class="mt-2 text-slate-400 leading-relaxed">You'll be surprised how much they tell you. Read a few reviews or threads, especially the 1-star reviews and the questions people keep asking. Then come back. Your answers are saved.</p>
+
+      <label for="searchTerm" class="block mt-6 text-sm font-medium text-slate-300">What to search for</label>
+      <input id="searchTerm" data-field="searchTerm" type="text" class="field mt-2 w-full rounded-xl px-5 py-3 text-slate-200 placeholder-slate-500" placeholder="e.g. leash training" />
+      <div id="lookLinks" class="mt-4 grid sm:grid-cols-2 gap-3"></div>
+
+      <div class="mt-6 rounded-xl bg-slate-800/60 border border-slate-700/60 p-5 text-sm text-slate-400 leading-relaxed">
+        Look for what disappointed people, what they wish it did, and the words they repeat. Those words are gold.
       </div>
 
-      <!-- Step 3 -->
-      <div class="step hidden-step" data-step="3">
-        <p class="text-sm text-sky-400 font-semibold uppercase tracking-wider mb-2">Question 3 of 3</p>
-        <h2 class="text-xl font-bold text-white mb-6">Who is it for?</h2>
-        <textarea id="audience" rows="3" required placeholder="Describe the person who is already looking for this" class="w-full rounded-xl px-5 py-3.5 bg-slate-900/80 border border-slate-600 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-400 resize-y"></textarea>
+      <label class="block mt-6 text-sm font-medium text-slate-300">What do buyers wish they'd gotten? Use their words if you can.</label>
+      <textarea data-field="wish" rows="4" class="field mt-2 w-full rounded-xl px-5 py-4 text-slate-200 placeholder-slate-500 resize-y" placeholder='e.g. "nothing actually stops the pulling"'></textarea>
+      <p class="mt-3 text-sm text-slate-500">Not ready to look yet? Tap Next. You can come back to this anytime.</p>
+    </section>
+
+    <!-- HOW -->
+    <section class="screen" data-screen="how">
+      <h2 class="text-2xl font-bold text-white">How do they want it?</h2>
+      <p class="mt-2 text-slate-400 leading-relaxed">Think about what they already buy. That's the shape they're comfortable with.</p>
+
+      <p class="mt-7 text-sm font-medium text-slate-300">What form? Pick any.</p>
+      <div class="mt-3 flex flex-wrap gap-2" data-chips="format" data-multi="true">
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="A short guide">A short guide</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Video">Video</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="A physical product">A physical product</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="A template or tool">A template or tool</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Done for them">Done for them</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="One-on-one help">One-on-one help</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Not sure yet">Not sure yet</button>
       </div>
 
-      <!-- Result -->
-      <div class="step hidden-step" data-step="done">
-        <p class="text-sm text-sky-400 font-semibold uppercase tracking-wider mb-2">Your next step</p>
-        <h2 class="text-xl font-bold text-white mb-4">Find someone already selling to that person.</h2>
-        <p class="text-slate-400 leading-relaxed mb-4">Look at their reviews, especially the 1-star ones. Copy the words buyers use. That's what you give them.</p>
-        <p class="text-slate-400 leading-relaxed">Start with one product, one link, one post. Your only goal is $1.</p>
+      <p class="mt-7 text-sm font-medium text-slate-300">What price feels right to them?</p>
+      <div class="mt-3 flex flex-wrap gap-2" data-chips="price" data-multi="false">
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Low, easy to try">Low, easy to try</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Middle">Middle</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Premium">Premium</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Not sure yet">Not sure yet</button>
       </div>
 
-      <div class="mt-8 flex justify-between items-center" data-nav>
-        <button type="button" id="back" class="text-sm text-slate-500 hover:text-slate-300 invisible" onclick="back()">← Back</button>
-        <button type="submit" id="nextBtn" class="btn-primary text-white font-semibold px-7 py-3 rounded-xl text-sm">Next</button>
+      <p class="mt-7 text-sm font-medium text-slate-300">How soon do they need it?</p>
+      <div class="mt-3 flex flex-wrap gap-2" data-chips="speed" data-multi="false">
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Today">Today</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="This week">This week</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Over time">Over time</button>
+        <button type="button" class="chip rounded-full px-4 py-2 text-sm text-slate-300" data-value="Not sure yet">Not sure yet</button>
       </div>
-    </form>
+    </section>
 
-    <p class="text-center text-xs text-slate-500 mt-10">
-      This is free. If it helped, <a href="https://buy.stripe.com/5kQ7sK6Z97ja5OU7MX8IU01" class="underline hover:text-slate-300">you can pay what you want</a>.
-    </p>
-  </section>
+    <!-- PICTURE -->
+    <section class="screen" data-screen="picture">
+      <h2 class="text-2xl font-bold text-white">What would it look like if you gave them exactly that?</h2>
+      <p class="mt-2 text-slate-400 leading-relaxed">Describe it so simply they could picture themselves using it. If they can see it, they'll want it.</p>
+      <textarea data-field="picture" rows="4" class="field mt-6 w-full rounded-xl px-5 py-4 text-slate-200 placeholder-slate-500 resize-y" placeholder="e.g. a 5-day leash guide, one short video a day, under $20"></textarea>
+    </section>
+
+    <!-- CARD -->
+    <section class="screen" data-screen="card">
+      <div class="no-print">
+        <h2 class="text-3xl font-bold text-white leading-tight">Look at what you just did.</h2>
+        <p class="mt-3 text-lg text-slate-400 leading-relaxed">You now know more about your buyer than most people who are selling to them.</p>
+      </div>
+
+      <div id="card" class="mt-8 rounded-2xl border border-slate-700 p-6 sm:p-8">
+        <div class="flex items-baseline justify-between gap-4 border-b border-slate-700 pb-4">
+          <h3 class="text-xl font-bold text-white">My Audience Card</h3>
+          <span id="cardDate" class="text-sm text-slate-500"></span>
+        </div>
+        <dl id="cardRows" class="mt-5 space-y-5"></dl>
+        <div class="mt-6 rounded-xl border border-sky-400/30 bg-sky-500/10 p-5">
+          <p class="text-sm font-semibold text-sky-300">My next step</p>
+          <p id="cardNext" class="mt-2 text-slate-200 leading-relaxed"></p>
+        </div>
+      </div>
+
+      <div class="no-print mt-6 flex flex-wrap gap-3">
+        <button type="button" id="copyBtn" class="btn-primary text-white font-semibold px-6 py-3 rounded-xl text-sm">Copy my card</button>
+        <button type="button" id="imageBtn" class="px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:text-white text-sm">Save as image</button>
+        <button type="button" id="printBtn" class="px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:text-white text-sm">Print</button>
+      </div>
+      <p id="actionMsg" class="no-print mt-3 text-sm text-emerald-300 hidden"></p>
+
+      <p class="no-print mt-10 text-xl text-white font-semibold leading-relaxed">You don't need a new system. You need this card and one small step.</p>
+      <p class="no-print mt-2 text-slate-400">Come back and make a new card anytime. Each one gets sharper.</p>
+
+      <div id="feedback" class="no-print mt-10 card rounded-2xl p-6">
+        <p class="text-slate-200 font-medium">Did this help?</p>
+        <div class="mt-4 flex gap-3">
+          <button type="button" class="fb px-6 py-2.5 rounded-xl border border-slate-600 text-slate-300 hover:text-white text-sm" data-value="yes">Yes</button>
+          <button type="button" class="fb px-6 py-2.5 rounded-xl border border-slate-600 text-slate-300 hover:text-white text-sm" data-value="not-yet">Not yet</button>
+        </div>
+        <p id="fbThanks" class="hidden mt-4 text-sm text-emerald-300">Thank you. That helps make this better for the next person.</p>
+      </div>
+
+      <button type="button" id="newCardBtn" class="no-print mt-8 text-sm text-slate-400 hover:text-slate-200 underline">Start a new card</button>
+    </section>
+
+    <!-- NAV -->
+    <div id="nav" class="no-print mt-10 flex items-center justify-between hidden">
+      <button type="button" id="backBtn" class="text-sm text-slate-400 hover:text-slate-200 px-2 py-2">Back</button>
+      <div class="flex items-center gap-4">
+        <button type="button" id="notSureBtn" class="text-sm text-slate-400 hover:text-slate-200 px-2 py-2">Not sure yet</button>
+        <button type="button" id="nextBtn" class="btn-primary text-white font-semibold px-7 py-3 rounded-xl text-sm">Next</button>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="no-print border-t border-slate-800 mt-8">
+    <div class="max-w-2xl mx-auto px-6 py-8 text-center text-xs text-slate-500">
+      <p>This is free. If it helped, <a href="https://buy.stripe.com/5kQ7sK6Z97ja5OU7MX8IU01" class="underline hover:text-slate-300">you can pay what you want</a>.</p>
+    </div>
+  </footer>
 
   <script>
-    let current = 1;
-    const steps = Array.from(document.querySelectorAll('.step'));
-    const backBtn = document.getElementById('back');
-    const nextBtn = document.getElementById('nextBtn');
-    const answers = {};
+    // Optional: set to an endpoint that accepts GET ?helped=yes|not-yet to collect feedback. Empty = no data sent.
+    const FEEDBACK_URL = '';
 
-    // Single-choice options (step 1)
-    document.querySelectorAll('[data-group] .option').forEach(btn => {
-      btn.addEventListener('click', () => {
-        btn.parentElement.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        answers.stage = btn.dataset.value;
-        setTimeout(next, 250);
+    const KEY = 'wnmm-card-v1';
+    const ORDER = ['intro', 'stage', 'hope', 'topic', 'where', 'look', 'how', 'picture', 'card'];
+    const QUESTIONS = ['stage', 'hope', 'topic', 'where', 'look', 'how', 'picture'];
+    const NAV_SCREENS = ['hope', 'topic', 'where', 'look', 'how', 'picture'];
+    const NOT_SURE_SCREENS = ['hope', 'topic', 'picture'];
+    const ENCOURAGE = {
+      hope: 'Good. Knowing where you are is the first real step.',
+      topic: "That's honest, and it's useful. Hold onto it.",
+      where: 'Good. Plain words are perfect.',
+      look: "That's more clarity than most people start with.",
+      how: "Nice. You're thinking like a buyer now.",
+      picture: 'Almost there.',
+      card: ''
+    };
+
+    const STAGE_TEXT = {
+      burned: {
+        hopeQ: 'When you bought that course or program, what were you actually hoping for?',
+        hopeSub: "Not what the ad promised. What you really wanted. This matters: you were the buyer once, and what you wanted then is exactly the kind of thing buyers want now.",
+        topicQ: 'What do you want to sell, or what do you know how to do?',
+        topicSub: 'Plain words. One line is plenty.',
+        topicPh: 'e.g. I know how to train dogs',
+        next: "Don't buy anything else. You already have what you need: your own experience as a buyer and what you just read. Make the smallest version of what's on this card, put it where these people already are, and aim for your first dollar."
+      },
+      none: {
+        hopeQ: 'Think of the last time you paid for something to fix a problem. What were you really hoping for?',
+        hopeSub: 'Anything counts: a product, a class, a service. What you wanted then is exactly the kind of thing buyers want now.',
+        topicQ: 'Who do you understand well?',
+        topicSub: 'A group you know, belong to, or used to be part of. New parents, truck drivers, people learning guitar, small landlords. Start with people, not products.',
+        topicPh: 'e.g. people who just got their first dog',
+        next: 'Spend 20 minutes reading what these people ask for online. When the same wish shows up three times, make the smallest thing that answers it. Aim for your first dollar.'
+      },
+      selling: {
+        hopeQ: 'When people buy from you, what do you think they are really hoping for?',
+        hopeSub: "Your best guess is fine. We'll check it against what buyers actually say.",
+        topicQ: 'What are you selling now?',
+        topicSub: 'Plain words. One line is plenty.',
+        topicPh: 'e.g. handmade dog leashes',
+        next: 'Your audience is already talking to you. This week, read your own reviews, emails, and messages. Change one thing so it matches their words, and watch what happens.'
+      }
+    };
+
+    function load() {
+      try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; }
+    }
+    function save() {
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+    }
+    function fresh() { return { screen: 'intro', a: {}, created: new Date().toISOString() }; }
+
+    let state = load() || fresh();
+    let resumed = !!(state && state.screen !== 'intro' && Object.keys(state.a).length);
+    if (resumed) state.screen = 'intro';
+
+    const $ = (s, r = document) => r.querySelector(s);
+    const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const stageText = () => STAGE_TEXT[state.a.stage] || STAGE_TEXT.burned;
+
+    function go(screen, forward) {
+      state.screen = screen;
+      save();
+      render(forward);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function render(forward) {
+      const s = state.screen;
+      $$('.screen').forEach(el => el.classList.toggle('active', el.dataset.screen === s));
+
+      const qi = QUESTIONS.indexOf(s);
+      $('#progressWrap').classList.toggle('hidden', qi === -1);
+      if (qi !== -1) {
+        $('#progressLabel').textContent = 'Question ' + (qi + 1) + ' of ' + QUESTIONS.length;
+        $('#progressBar').style.width = Math.round(((qi + 1) / QUESTIONS.length) * 100) + '%';
+      }
+
+      const enc = $('#encourage');
+      if (forward && ENCOURAGE[s]) { enc.textContent = ENCOURAGE[s]; enc.classList.remove('hidden'); }
+      else enc.classList.add('hidden');
+
+      $('#restartTop').classList.toggle('hidden', s === 'intro');
+      $('#nav').classList.toggle('hidden', !NAV_SCREENS.includes(s) && s !== 'stage');
+      $('#nextBtn').classList.toggle('hidden', s === 'stage');
+      $('#notSureBtn').classList.toggle('hidden', !NOT_SURE_SCREENS.includes(s));
+      $('#nextBtn').textContent = s === 'picture' ? 'Make my card' : 'Next';
+
+      $('#resumeBox').classList.toggle('hidden', !resumed);
+      $('#startBtn').classList.toggle('hidden', resumed);
+
+      const t = stageText();
+      $('#hopeQ').textContent = t.hopeQ;
+      $('#hopeSub').textContent = t.hopeSub;
+      $('#topicQ').textContent = t.topicQ;
+      $('#topicSub').textContent = t.topicSub;
+      $('#topicInput').placeholder = t.topicPh;
+
+      $$('[data-field]').forEach(el => { el.value = state.a[el.dataset.field] || ''; });
+      $$('[data-choice] .option').forEach(b => b.classList.toggle('selected', state.a[b.parentElement.dataset.choice] === b.dataset.value));
+      $$('[data-chips]').forEach(group => {
+        const key = group.dataset.chips;
+        const val = state.a[key];
+        $$('.chip', group).forEach(c => {
+          const on = Array.isArray(val) ? val.includes(c.dataset.value) : val === c.dataset.value;
+          c.classList.toggle('selected', on);
+          c.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+      });
+
+      if (s === 'look') {
+        if (!state.a.searchTerm && state.a.topic) {
+          state.a.searchTerm = state.a.topic;
+          $('#searchTerm').value = state.a.topic;
+          save();
+        }
+        renderLinks();
+      }
+      if (s === 'card') renderCard();
+    }
+
+    function renderLinks() {
+      const q = encodeURIComponent(($('#searchTerm').value || '').trim());
+      const places = state.a.places || [];
+      const links = [
+        { name: 'Amazon reviews', place: 'Amazon', url: 'https://www.amazon.com/s?k=' + q },
+        { name: 'Reddit threads', place: 'Reddit', url: 'https://www.reddit.com/search/?q=' + q },
+        { name: 'Etsy listings', place: 'Etsy', url: 'https://www.etsy.com/search?q=' + q },
+        { name: 'YouTube comments', place: 'YouTube', url: 'https://www.youtube.com/results?search_query=' + q },
+        { name: 'eBay listings', place: 'eBay', url: 'https://www.ebay.com/sch/i.html?_nkw=' + q },
+        { name: 'Complaints and reviews', place: '', url: 'https://www.google.com/search?q=' + q + '+reviews+complaints' }
+      ];
+      links.sort((x, y) => (places.includes(y.place) ? 1 : 0) - (places.includes(x.place) ? 1 : 0));
+      $('#lookLinks').innerHTML = q ? links.map(l =>
+        '<a href="' + l.url + '" target="_blank" rel="noopener" class="option rounded-xl px-4 py-3 text-sm text-slate-200 block">' +
+        esc(l.name) + (places.includes(l.place) ? '<span class="block text-xs text-sky-300 mt-0.5">Where your buyers are</span>' : '') +
+        '</a>'
+      ).join('') : '<p class="text-sm text-slate-500 sm:col-span-2">Type what to search for and your links appear here.</p>';
+    }
+
+    function cardData() {
+      const a = state.a;
+      const join = v => Array.isArray(v) ? v.filter(x => x !== 'Not sure yet').join(', ') : (v && v !== 'Not sure yet' ? v : '');
+      const how = [join(a.format), join(a.price) && join(a.price) + ' price', join(a.speed)].filter(Boolean).join('. ');
+      const whoLabel = a.stage === 'none' ? 'People I understand' : 'What I offer';
+      return [
+        ['Who they are', a.who || (a.stage === 'none' ? a.topic : '')],
+        ['Where they are', join(a.places)],
+        ['What they wish they had gotten', a.wish],
+        ['What buyers are really hoping for', a.hope],
+        ['How they want it', how],
+        ['What it looks like', a.picture],
+        [whoLabel, a.stage === 'none' ? '' : a.topic]
+      ].filter(r => !(r[0] === whoLabel && a.stage === 'none'));
+    }
+
+    function renderCard() {
+      const d = new Date(state.created || Date.now());
+      $('#cardDate').textContent = d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+      $('#cardRows').innerHTML = cardData().map(([k, v]) =>
+        '<div><dt class="text-sm text-slate-500">' + esc(k) + '</dt><dd class="mt-1 ' +
+        (v ? 'text-slate-100' : 'text-slate-500 italic') + ' leading-relaxed">' +
+        (v ? esc(v) : 'Not sure yet. Come back to this one.') + '</dd></div>'
+      ).join('');
+      $('#cardNext').textContent = stageText().next;
+    }
+
+    function cardText() {
+      const lines = ['MY AUDIENCE CARD', $('#cardDate').textContent, ''];
+      cardData().forEach(([k, v]) => { lines.push(k + ':'); lines.push(v || 'Not sure yet.'); lines.push(''); });
+      lines.push('My next step:'); lines.push(stageText().next);
+      return lines.join('\n');
+    }
+
+    function flash(msg) {
+      const m = $('#actionMsg');
+      m.textContent = msg;
+      m.classList.remove('hidden');
+      setTimeout(() => m.classList.add('hidden'), 3000);
+    }
+
+    function nextScreen() {
+      const i = ORDER.indexOf(state.screen);
+      if (i < ORDER.length - 1) go(ORDER[i + 1], true);
+    }
+    function prevScreen() {
+      const i = ORDER.indexOf(state.screen);
+      if (i > 0) go(ORDER[i - 1], false);
+    }
+    function restart() {
+      if (Object.keys(state.a).length && !confirm('Start a new card? Your current answers will be cleared.')) return;
+      state = fresh();
+      resumed = false;
+      save();
+      go('intro', false);
+    }
+
+    // Events
+    $('#startBtn').addEventListener('click', () => go('stage', true));
+    $('#resumeBtn').addEventListener('click', () => {
+      resumed = false;
+      const saved = load();
+      go(saved && saved.lastScreen ? saved.lastScreen : 'stage', true);
+    });
+    $('#freshBtn').addEventListener('click', () => { state = fresh(); resumed = false; save(); go('stage', true); });
+    $('#restartTop').addEventListener('click', restart);
+    $('#newCardBtn').addEventListener('click', restart);
+    $('#nextBtn').addEventListener('click', nextScreen);
+    $('#backBtn').addEventListener('click', prevScreen);
+    $('#notSureBtn').addEventListener('click', () => {
+      const field = $('.screen.active [data-field]');
+      if (field) { state.a[field.dataset.field] = ''; save(); }
+      nextScreen();
+    });
+
+    $$('[data-choice] .option').forEach(btn => btn.addEventListener('click', () => {
+      state.a[btn.parentElement.dataset.choice] = btn.dataset.value;
+      save();
+      render(false);
+      setTimeout(nextScreen, 220);
+    }));
+
+    $$('[data-chips]').forEach(group => {
+      const key = group.dataset.chips;
+      const multi = group.dataset.multi === 'true';
+      $$('.chip', group).forEach(c => c.addEventListener('click', () => {
+        const v = c.dataset.value;
+        if (multi) {
+          let arr = Array.isArray(state.a[key]) ? state.a[key].slice() : [];
+          if (v === 'Not sure yet') arr = arr.includes(v) ? [] : [v];
+          else {
+            arr = arr.filter(x => x !== 'Not sure yet');
+            arr = arr.includes(v) ? arr.filter(x => x !== v) : arr.concat(v);
+          }
+          state.a[key] = arr;
+        } else {
+          state.a[key] = state.a[key] === v ? '' : v;
+        }
+        save();
+        render(false);
+      }));
+    });
+
+    $$('[data-field]').forEach(el => el.addEventListener('input', () => {
+      state.a[el.dataset.field] = el.value;
+      save();
+      if (el.id === 'searchTerm') renderLinks();
+    }));
+
+    $('#copyBtn').addEventListener('click', async () => {
+      const text = cardText();
+      try { await navigator.clipboard.writeText(text); flash('Copied. Paste it anywhere you keep notes.'); }
+      catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); ta.remove();
+        flash('Copied. Paste it anywhere you keep notes.');
+      }
+    });
+
+    $('#imageBtn').addEventListener('click', () => {
+      if (typeof html2canvas !== 'function') { flash('Image saving is unavailable right now. Try Copy or Print.'); return; }
+      html2canvas($('#card'), { backgroundColor: '#0f172a', scale: 2 }).then(canvas => {
+        const a = document.createElement('a');
+        a.download = 'my-audience-card-' + new Date().toISOString().slice(0, 10) + '.png';
+        a.href = canvas.toDataURL('image/png');
+        a.click();
+        flash('Saved. Check your downloads.');
       });
     });
 
-    function show(n) {
-      steps.forEach(s => s.classList.toggle('hidden-step', s.dataset.step != n));
-      backBtn.classList.toggle('invisible', n === 1 || n === 'done');
-      nextBtn.textContent = n === 3 ? 'See my next step' : (n === 'done' ? 'Start over' : 'Next');
-      nextBtn.type = 'submit';
-      document.querySelector('[data-nav]').classList.toggle('hidden-step', n === 'done' ? false : false);
-    }
+    $('#printBtn').addEventListener('click', () => window.print());
 
-    function next() {
-      if (current === 1 && !answers.stage) return;
-      if (current === 2) answers.product = document.getElementById('product').value;
-      if (current === 3) {
-        answers.audience = document.getElementById('audience').value;
-        current = 'done';
-        show(current);
-        nextBtn.onclick = () => location.reload();
-        return;
-      }
-      current = current === 1 ? 2 : 3;
-      show(current);
-    }
+    $$('.fb').forEach(b => b.addEventListener('click', () => {
+      if (FEEDBACK_URL) { try { fetch(FEEDBACK_URL + '?helped=' + encodeURIComponent(b.dataset.value), { mode: 'no-cors' }); } catch (e) {} }
+      $$('.fb').forEach(x => x.disabled = true);
+      $('#fbThanks').classList.remove('hidden');
+    }));
 
-    function back() {
-      if (current === 2) current = 1;
-      else if (current === 3) current = 2;
-      show(current);
-    }
+    // Remember last question screen for resume
+    const _go = go;
+    go = function (screen, forward) {
+      if (screen !== 'intro') state.lastScreen = screen;
+      _go(screen, forward);
+    };
 
-    show(current);
+    render(false);
   </script>
 </body>
 </html>
